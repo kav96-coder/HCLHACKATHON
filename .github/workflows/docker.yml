@@ -1,0 +1,39 @@
+name: Docker Build and Push
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Dockerfile'
+      - 'src/**'
+      - '.github/workflows/docker.yml'
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v3
+      with:
+        role-to-assume: arn:aws:iam::123456789012:role/github-oidc-role
+        aws-region: us-east-1
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, Tag, and Push Docker image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPO_NAME: nodejs-app
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t 539935451710.dkr.ecr.us-east-1.amazonaws.com/microservice-app:$IMAGE_TAG .
+        docker push 539935451710.dkr.ecr.us-east-1.amazonaws.com/microservice-app:$IMAGE_TAG

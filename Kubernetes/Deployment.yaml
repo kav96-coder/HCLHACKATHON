@@ -1,0 +1,20 @@
+APIversion: apps/v1
+kind: Deployment
+metadata:
+  name: microservice-app
+spec:
+  Replicas: 2
+   selector:
+    matchlables:
+      app: microservice-app
+template:
+  metadata:
+    lables:
+      app: microservice-app
+specs:
+  Container:
+    name: microservice-app
+    image: 539935451710.dkr.ecr.us-east-1.amazonaws.com/microservice-app:latest
+  Port:
+    ContainerPort: 8080
+  

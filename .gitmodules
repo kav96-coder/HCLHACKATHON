@@ -1,0 +1,3 @@
+[submodule "AWSfargatehack1"]
+	path = AWSfargatehack1
+	url = https://github.com/kav96-coder/HCLHACKATHON.git
